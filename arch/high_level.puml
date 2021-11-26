@@ -1,0 +1,35 @@
+@startuml
+
+cloud Server as remote_machine {
+  node "Docker Daemon" as docker_daemon {
+    ()  "tcp port 1337" as docker_daemon_tcp_iface
+  }
+}
+
+node "Local" as local_machine {
+
+    () "proxied docker socket" as proxied_iface
+    note left
+    Forwarded to localhost:1337
+    end note
+
+    card tbd {
+        card "Docker client lib" as  tbd_docker_client_library
+        card "Go compiler bindings" as  tbd_gc_bindings
+        storage "Artifact storage" as tbd_artifact_storage
+    }
+    package "Some go program" as example_go_program {
+        file Entrypoint as example_go_program_entrypoint
+        frame "Rest of packages" as example_go_program_rest_pkgs
+    }
+    tbd_gc_bindings -> example_go_program_entrypoint: 1. Build
+    tbd_gc_bindings -> tbd_artifact_storage: 2. Store build artifact
+    tbd_docker_client_library --> tbd_artifact_storage: 3. Lookup artifact and build image
+    tbd_docker_client_library --> proxied_iface: 4. Push built image and run it on the remote server
+
+
+    proxied_iface --( docker_daemon_tcp_iface : local port forwarding via ssh
+
+
+}
+@enduml
