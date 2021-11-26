@@ -2,10 +2,16 @@ module github.com/4thel00z/tbd
 
 go 1.17
 
-require github.com/docker/docker v20.10.11+incompatible
+require (
+	github.com/docker/docker v20.10.11+incompatible
+	github.com/google/uuid v1.2.0
+	github.com/prometheus/common v0.10.0
+)
 
 require (
 	github.com/Microsoft/go-winio v0.4.17 // indirect
+	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
+	github.com/alecthomas/units v0.0.0-20190717042225-c3de453c63f4 // indirect
 	github.com/containerd/containerd v1.5.8 // indirect
 	github.com/docker/distribution v2.7.1+incompatible // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
@@ -25,4 +31,5 @@ require (
 	google.golang.org/genproto v0.0.0-20201110150050-8816d57aaa9a // indirect
 	google.golang.org/grpc v1.42.0 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
+	gopkg.in/alecthomas/kingpin.v2 v2.2.6 // indirect
 )
