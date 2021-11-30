@@ -181,5 +181,34 @@ func (g GithubStorage) Download(checksum string) (io.ReadCloser, error) {
 }
 
 func (g GithubStorage) Path(checksum string) (string, error) {
-	panic("implement me")
+	c, directoryContent, _, err := g.Client.Repositories.GetContents(context.Background(),
+		g.Owner, g.RepositoryName, g.filePath, &github.RepositoryContentGetOptions{
+			Ref: checksum,
+		})
+	if err != nil {
+		return "", err
+	}
+	if c != nil {
+		url := c.GetDownloadURL()
+		if url == "" {
+			return "", errors.New("f.GetDownloadURL()=\"\"")
+		}
+		return url, nil
+
+	}
+	if directoryContent == nil || len(directoryContent) == 0 {
+		return "", errors.New(fmt.Sprintf("file not found for checksum: %s", checksum))
+	}
+
+	for _, f := range directoryContent {
+		if f.GetPath() == g.filePath {
+			url := f.GetDownloadURL()
+			if url == "" {
+				return "", errors.New("f.GetDownloadURL()=\"\"")
+			}
+			return url, nil
+		}
+	}
+
+	return "", errors.New(fmt.Sprintf("file not found for checksum inside the directory content: %s", checksum))
 }
