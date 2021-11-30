@@ -12,12 +12,12 @@ type TBD struct {
 	Builder Builder
 }
 
-func DefaultTBD(debug bool) (TBD, error) {
+func DefaultTBD(owner, repo, apiKey string, debug bool) (TBD, error) {
 	builder, err := NewDockerBuilder(debug, "")
 	if err != nil {
 		return TBD{}, err
 	}
-	storage, err := s.NewLocalStorage()
+	storage, err := s.NewGithubStorage(owner, repo, apiKey)
 	if err != nil {
 		return TBD{}, err
 	}
